@@ -9,7 +9,7 @@ def hello_world():
 
 @app.route("/products")
 def get_products():
-    pass
+    return "We got plenty of products here!"
 
 app.route("/products")
 def post_products():
