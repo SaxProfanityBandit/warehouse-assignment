@@ -1,10 +1,11 @@
 #Imports
 from lib2to3.pytree import convert
-from flask import Flask, jsonify
+from flask import Flask, jsonify, make_response
 from flask_mysqldb import MySQL
 import json
 import mysql.connector
 from datetime import datetime
+from flask import request
 
 app = Flask(__name__)
 
@@ -26,43 +27,38 @@ app.config['JSON_AS_ASCII'] = False
 
 
 
-@app.route("/", methods=['GET'])
-def hello_world():
-    #cur = mysql.connection.cursor(dictionary=True)
-    #cur.execute("SELECT * FROM products;")
-    #mysql.connection.commit()
-    #row = cur.fetchall()
-    #json_data = convert_to_json(row, 2)
-    #cur.close()
-    #print(type(json_data))
+@app.route("/")
+def show_index():
+    return "Welcome to the index of this warehouse."
 
+@app.route("/products", methods=['GET', 'POST'])
+def products():
+    if request.method == 'GET':
+        return make_response(get_json("products"), 200)
+    elif request.method == 'POST':
+        json_data = jsonify(request.data)
+        print(json_data)
+        return make_response("Stuff was created", 201)
+
+    return make_response("Wrong type of request.", 400)
+
+@app.route("/customers", methods=['GET'])
+def get_customers():
+    return get_json("customers")
+
+@app.route("/staff", methods=['GET'])
+def get_staff():
+    return get_json("staff")
+
+@app.route("/orders", methods=['GET'])
+def get_orders():
+    return get_json("orders")
+
+def get_json(table):
     cursor = db.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM products;')
+    cursor.execute('SELECT * FROM {};'.format(table))
     result = cursor.fetchall()
-
-    #return f"json: {json.dumps(result)}"
-    #return result[0]
-
-    rows = list()
-    for x in range(len(result)):
-        rows.append(convert_to_json(result[x]))
-    
-    return rows[0] + rows[1]
-
-
-
-    #return json_data
-
-def convert_to_json(dict):
-    for key in dict:
-        if type(dict[key]) is datetime:
-            dict[key] = str(dict[key])
-    data = f"json: {json.dumps(dict, ensure_ascii=False)}"
-    return data
-
-@app.route("/products")
-def get_products():
-    return "We got plenty of products here!"
+    return jsonify(result)
 
 app.route("/products")
 def post_products():
