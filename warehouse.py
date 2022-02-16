@@ -9,6 +9,7 @@ app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'warehouse_admin'
 app.config['MYSQL_PASSWORD'] = 'devops'
 app.config['MYSQL_DB'] = 'warehouse'
+app.config['JSON_AS_ASCII'] = False
 
 mysql = MySQL(app)
 
@@ -18,15 +19,11 @@ def hello_world():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM products;")
     mysql.connection.commit()
-    row = cur.fetchall()
-    desc = list(zip(*cur.description))[0]
-    rowdict = dict(zip(str(row[0]), desc))
-    jsondict = jsonify(rowdict)
+    row = cur.fetchone()
+    json_data = jsonify([x for x in row])
     cur.close()
     output = ""
-    #for x in rows[1]:
-        #output = output + str(x)
-    return jsondict
+    return json_data
 
 @app.route("/products")
 def get_products():
