@@ -12,7 +12,7 @@ app.config['MYSQL_HOST'] = '127.0.0.1'
 app.config['MYSQL_USER'] = 'warehouse_admin'
 app.config['MYSQL_PASSWORD'] = 'devops'
 app.config['MYSQL_DB'] = 'warehouse'
-app.config['JSON_AS_ASCII'] = False
+
 
 #mysql = MySQL(app)
 
@@ -22,7 +22,7 @@ db = mysql.connector.connect(
     passwd='devops',
     db='warehouse',
 )
-
+app.config['JSON_AS_ASCII'] = False
 
 
 
@@ -41,18 +41,18 @@ def hello_world():
     result = cursor.fetchall()
 
     #return f"json: {json.dumps(result)}"
-    return convert_to_json(result, 1)
+    #return result[0]
+    return convert_to_json(result[0])
 
 
 
     #return json_data
 
-def convert_to_json(dict, id):
-    print(type(dict))
-    for key in dict[id-1]:
+def convert_to_json(dict):
+    for key in dict:
         if type(dict[key]) is datetime:
             dict[key] = str(dict[key])
-    data = f"json: {json.dumps(dict)}"
+    data = f"json: {json.dumps(dict, ensure_ascii=False)}"
     return data
 
 @app.route("/products")
