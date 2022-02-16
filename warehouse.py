@@ -26,7 +26,7 @@ app.config['JSON_AS_ASCII'] = False
 
 
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 def hello_world():
     #cur = mysql.connection.cursor(dictionary=True)
     #cur.execute("SELECT * FROM products;")
@@ -42,7 +42,12 @@ def hello_world():
 
     #return f"json: {json.dumps(result)}"
     #return result[0]
-    return convert_to_json(result[0])
+
+    rows = list()
+    for x in range(len(result)):
+        rows.append(convert_to_json(result[x]))
+    
+    return rows[0] + rows[1]
 
 
 
