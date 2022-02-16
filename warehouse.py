@@ -1,7 +1,10 @@
 #Imports
+from lib2to3.pytree import convert
 from flask import Flask, jsonify
 from flask_mysqldb import MySQL
 import json
+import mysql.connector
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -11,22 +14,46 @@ app.config['MYSQL_PASSWORD'] = 'devops'
 app.config['MYSQL_DB'] = 'warehouse'
 app.config['JSON_AS_ASCII'] = False
 
-mysql = MySQL(app)
+#mysql = MySQL(app)
+
+db = mysql.connector.connect(
+    host='127.0.0.1',
+    user='warehouse_admin',
+    passwd='devops',
+    db='warehouse',
+)
+
+
 
 
 @app.route("/")
 def hello_world():
-    cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM products;")
-    mysql.connection.commit()
-    row = cur.fetchall()
-    json_data = convert_to_json(row, 1)
-    cur.close()
-    output = ""
-    return json_data
+    #cur = mysql.connection.cursor(dictionary=True)
+    #cur.execute("SELECT * FROM products;")
+    #mysql.connection.commit()
+    #row = cur.fetchall()
+    #json_data = convert_to_json(row, 2)
+    #cur.close()
+    #print(type(json_data))
+
+    cursor = db.cursor(dictionary=True)
+    cursor.execute('SELECT * FROM products;')
+    result = cursor.fetchall()
+
+    #return f"json: {json.dumps(result)}"
+    return convert_to_json(result, 1)
+
+
+
+    #return json_data
 
 def convert_to_json(dict, id):
-    return jsonify([x for x in dict[id-1]])
+    print(type(dict))
+    for key in dict[id-1]:
+        if type(dict[key]) is datetime:
+            dict[key] = str(dict[key])
+    data = f"json: {json.dumps(dict)}"
+    return data
 
 @app.route("/products")
 def get_products():
