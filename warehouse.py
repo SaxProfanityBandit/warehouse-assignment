@@ -19,11 +19,14 @@ def hello_world():
     cur = mysql.connection.cursor()
     cur.execute("SELECT * FROM products;")
     mysql.connection.commit()
-    row = cur.fetchone()
-    json_data = jsonify([x for x in row])
+    row = cur.fetchall()
+    json_data = convert_to_json(row[1])
     cur.close()
     output = ""
     return json_data
+
+def convert_to_json(dict):
+    return jsonify([x for x in dict])
 
 @app.route("/products")
 def get_products():
