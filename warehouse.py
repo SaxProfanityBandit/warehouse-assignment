@@ -161,10 +161,10 @@ def get_orders():
         if json_data is not None:
             cursor = db.cursor(dictionary=True)
             query = (
-                "INSERT INTO orders (first_name, last_name, employee_since, age) "
-                "VALUES (%s, %s, %s, %s);"
+                "INSERT INTO orders (product_id, customer_id, staff_id) "
+                "VALUES (%s, %s, %s);"
             )
-            data = (json_data['first_name'], json_data['last_name'], json_data['employee_since'], json_data['age'])
+            data = (json_data['product_id'], json_data['customer_id'], json_data['staff_id'])
             cursor.execute(query, data)
             db.commit()
             if cursor is not None:
@@ -178,7 +178,7 @@ def get_orders():
 def order(_id):
     if request.method == 'GET':
         cursor = db.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM orders WHERE Id={};'.format(_id))
+        cursor.execute('SELECT * FROM orders WHERE product_id={};'.format(_id))
         result = cursor.fetchall()
         return make_response(jsonify(result), 200)
     elif request.method == 'DELETE':
