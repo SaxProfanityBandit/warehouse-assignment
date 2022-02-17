@@ -120,16 +120,16 @@ def get_staff():
         if json_data is not None:
             cursor = db.cursor(dictionary=True)
             query = (
-                "INSERT INTO staff (first_name, last_name, street, postal_code, age) "
-                "VALUES (%s, %s, %s, %s, %s);"
+                "INSERT INTO staff (first_name, last_name, employee_since, age) "
+                "VALUES (%s, %s, %s, %s);"
             )
-            data = (json_data['first_name'], json_data['last_name'], json_data['street'], json_data['postal_code'], json_data['age'])
+            data = (json_data['first_name'], json_data['last_name'], json_data['employee_since'], json_data['age'])
             cursor.execute(query, data)
             db.commit()
             if cursor is not None:
                 result = cursor.fetchone()
                 print(result)
-            return make_response("Added new customer.", 201)
+            return make_response("Added new staff.", 201)
 
     return make_response("Wrong type of request.", 400)
 
