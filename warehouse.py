@@ -79,10 +79,10 @@ def get_customers():
         if json_data is not None:
             cursor = db.cursor(dictionary=True)
             query = (
-                "INSERT INTO customers (name, price, amount) "
-                "VALUES (%s, %s, %s);"
+                "INSERT INTO customers (first_name, last_name, street, postal_code, age) "
+                "VALUES (%s, %s, %s, %s, %s);"
             )
-            data = (json_data['name'], json_data['price'], json_data['amount'])
+            data = (json_data['first_name'], json_data['last_name'], json_data['street'], json_data['postal_code'], json_data['age'])
             cursor.execute(query, data)
             db.commit()
             if cursor is not None:
