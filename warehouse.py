@@ -52,7 +52,7 @@ def products():
 
 
 @app.route("/products/<int:_id>", methods=['GET', 'DELETE', 'PUT'])
-def get_product(_id):
+def product(_id):
     if request.method == 'GET':
         cursor = db.cursor(dictionary=True)
         cursor.execute('SELECT * FROM products WHERE Id={};'.format(_id))
@@ -93,7 +93,7 @@ def get_customers():
     return make_response("Wrong type of request.", 400)
 
 @app.route("/customers/<int:_id>", methods=['GET', 'DELETE', 'PUT'])
-def get_product(_id):
+def customer(_id):
     if request.method == 'GET':
         cursor = db.cursor(dictionary=True)
         cursor.execute('SELECT * FROM customers WHERE Id={};'.format(_id))
