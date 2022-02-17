@@ -55,12 +55,12 @@ def products():
 def get_product(_id):
     if request.method == 'GET':
         cursor = db.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM products WHERE Id={}'.format(_id))
+        cursor.execute('SELECT * FROM products WHERE Id={};'.format(_id))
         result = cursor.fetchall()
         return make_response(jsonify(result), 200)
     elif request.method == 'DELETE':
         cursor = db.cursor(dictionary=True)
-        cursor.execute('DELETE * FROM products WHERE Id={}'.format(_id))
+        cursor.execute('DELETE FROM products WHERE Id={};'.format(_id))
         return make_response("Product with ID {} deleted.".format(_id), 200)
 
 @app.route("/customers", methods=['GET'])
