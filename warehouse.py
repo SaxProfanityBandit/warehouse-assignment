@@ -29,7 +29,7 @@ def show_index():
     return "Welcome to the index of this warehouse."
 
 @app.route("/products/<int:_id>", methods=['GET', 'POST'])
-def products():
+def products(_id):
     if request.method == 'GET':
         return make_response(get_json("products"), 200)
     elif request.method == 'POST':
