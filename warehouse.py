@@ -28,8 +28,8 @@ app.config['JSON_AS_ASCII'] = False
 def show_index():
     return "Welcome to the index of this warehouse."
 
-@app.route("/products/<int:_id>", methods=['GET', 'POST'])
-def products(_id):
+@app.route("/products/", methods=['GET', 'POST'])
+def products():
     if request.method == 'GET':
         return make_response(get_json("products"), 200)
     elif request.method == 'POST':
@@ -49,6 +49,14 @@ def products(_id):
             return make_response("Test", 201)
 
     return make_response("Wrong type of request.", 400)
+
+
+@app.route("/products/<int:_id>", methods=['GET'])
+def get_product(_id):
+    cursor = db.cursor(dictionary=True)
+    cursor.execute('SELECT * FROM products WHERE Id={}'.format(_id))
+    result = cursor.fetchall()
+    return jsonify(result)
 
 @app.route("/customers", methods=['GET'])
 def get_customers():
