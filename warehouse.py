@@ -148,7 +148,7 @@ def staff(_id):
     elif request.method == 'PUT':
         cursor = db.cursor(dictionary=True)
         json_data = request.json
-        cursor.execute('UPDATE staff SET last_name={} WHERE Id={};'.format(json_data['age'], _id))
+        cursor.execute('UPDATE staff SET last_name={} WHERE Id={};'.format(json_data['last_name'], _id))
         db.commit()
         return make_response("Staff with ID {} updated.".format(_id), 200)
 
