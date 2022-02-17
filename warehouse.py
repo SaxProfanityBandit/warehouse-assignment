@@ -191,7 +191,7 @@ def change_orders(_pid, _cid):
         return make_response(jsonify(result), 200)
     elif request.method == 'DELETE':
         cursor = db.cursor(dictionary=True)
-        cursor.execute('DELETE FROM orders WHERE product_id={} AND customer_id={};'.format(_pid, _cid))
+        cursor.execute('DELETE FROM orders WHERE product_id={} AND customer_id={} ORDER BY product_id DESC LIMIT 1;'.format(_pid, _cid))
         db.commit()
         return make_response("Order(s) with Product ID: {} and Customer ID: {} deleted.\n".format(_pid, _cid), 200)
     elif request.method == 'PUT':
