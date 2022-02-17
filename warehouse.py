@@ -1,18 +1,17 @@
 #Imports
-from lib2to3.pytree import convert
 from flask import Flask, jsonify, make_response
-from flask_mysqldb import MySQL
-import json
+#from flask_mysqldb import MySQL
+#import json
 import mysql.connector
-from datetime import datetime
+#from datetime import datetime
 from flask import request
 
 app = Flask(__name__)
 
-app.config['MYSQL_HOST'] = '127.0.0.1'
-app.config['MYSQL_USER'] = 'warehouse_admin'
-app.config['MYSQL_PASSWORD'] = 'devops'
-app.config['MYSQL_DB'] = 'warehouse'
+#app.config['MYSQL_HOST'] = '127.0.0.1'
+#app.config['MYSQL_USER'] = 'warehouse_admin'
+#app.config['MYSQL_PASSWORD'] = 'devops'
+#app.config['MYSQL_DB'] = 'warehouse'
 
 
 #mysql = MySQL(app)
@@ -36,9 +35,20 @@ def products():
     if request.method == 'GET':
         return make_response(get_json("products"), 200)
     elif request.method == 'POST':
-        json_data = jsonify(request.data)
-        print(json_data)
-        return make_response("Stuff was created", 201)
+        json_data = request.json
+        if json_data is not None:
+            cursor = db.cursor(dictionary=True)
+            query = (
+                "INSERT INTO products (name, price, amount) "
+                "VALUES (%s, %s, %s);"
+            )
+            data = (json_data['name'], json_data['price'], json_data['amount'])
+            cursor.execute(query, data)
+            db.commit()
+            if cursor is not None:
+                result = cursor.fetchone()
+                print(result)
+            return make_response("Test", 201)
 
     return make_response("Wrong type of request.", 400)
 
