@@ -28,7 +28,7 @@ app.config['JSON_AS_ASCII'] = False
 def show_index():
     return "Welcome to the index of this warehouse."
 
-@app.route("/products/", methods=['GET', 'POST'])
+@app.route("/products", methods=['GET', 'POST'])
 def products():
     if request.method == 'GET':
         return make_response(get_json("products"), 200)
@@ -46,7 +46,7 @@ def products():
             if cursor is not None:
                 result = cursor.fetchone()
                 print(result)
-            return make_response("Test", 201)
+            return make_response("Added new product.", 201)
 
     return make_response("Wrong type of request.", 400)
 
@@ -70,9 +70,27 @@ def get_product(_id):
         db.commit()
         return make_response("Product with ID {} updated.".format(_id), 200)
 
-@app.route("/customers", methods=['GET'])
+@app.route("/customers", methods=['GET', 'POST'])
 def get_customers():
-    return get_json("customers")
+    if request.method == 'GET':
+        return make_response(get_json("customers"), 200)
+    elif request.method == 'POST':
+        json_data = request.json
+        if json_data is not None:
+            cursor = db.cursor(dictionary=True)
+            query = (
+                "INSERT INTO customers (name, price, amount) "
+                "VALUES (%s, %s, %s);"
+            )
+            data = (json_data['name'], json_data['price'], json_data['amount'])
+            cursor.execute(query, data)
+            db.commit()
+            if cursor is not None:
+                result = cursor.fetchone()
+                print(result)
+            return make_response("Added new customer.", 201)
+
+    return make_response("Wrong type of request.", 400)
 
 @app.route("/staff", methods=['GET'])
 def get_staff():
