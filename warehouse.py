@@ -51,12 +51,17 @@ def products():
     return make_response("Wrong type of request.", 400)
 
 
-@app.route("/products/<int:_id>", methods=['GET'])
+@app.route("/products/<int:_id>", methods=['GET', 'DELETE'])
 def get_product(_id):
-    cursor = db.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM products WHERE Id={}'.format(_id))
-    result = cursor.fetchall()
-    return jsonify(result)
+    if request.method == 'GET':
+        cursor = db.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM products WHERE Id={}'.format(_id))
+        result = cursor.fetchall()
+        return make_response(jsonify(result), 200)
+    elif request.method == 'DELETE':
+        cursor = db.cursor(dictionary=True)
+        cursor.execute('DELETE * FROM products WHERE Id={}'.format(_id))
+        return make_response("Product with ID {} deleted.".format(_id), 200)
 
 @app.route("/customers", methods=['GET'])
 def get_customers():
