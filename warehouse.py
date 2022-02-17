@@ -137,20 +137,20 @@ def get_staff():
 def staff(_id):
     if request.method == 'GET':
         cursor = db.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM customers WHERE Id={};'.format(_id))
+        cursor.execute('SELECT * FROM staff WHERE Id={};'.format(_id))
         result = cursor.fetchall()
         return make_response(jsonify(result), 200)
     elif request.method == 'DELETE':
         cursor = db.cursor(dictionary=True)
-        cursor.execute('DELETE FROM customers WHERE Id={};'.format(_id))
+        cursor.execute('DELETE FROM staff WHERE Id={};'.format(_id))
         db.commit()
-        return make_response("Customer with ID {} deleted.".format(_id), 200)
+        return make_response("Staff with ID {} deleted.".format(_id), 200)
     elif request.method == 'PUT':
         cursor = db.cursor(dictionary=True)
         json_data = request.json
-        cursor.execute('UPDATE customers SET age={} WHERE Id={};'.format(json_data['age'], _id))
+        cursor.execute('UPDATE staff SET last_name={} WHERE Id={};'.format(json_data['age'], _id))
         db.commit()
-        return make_response("Customer with ID {} updated.".format(_id), 200)
+        return make_response("Staff with ID {} updated.".format(_id), 200)
 
 @app.route("/orders", methods=['GET'])
 def get_orders():
