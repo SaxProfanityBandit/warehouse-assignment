@@ -51,7 +51,7 @@ def products():
     return make_response("Wrong type of request.", 400)
 
 
-@app.route("/products/<int:_id>", methods=['GET', 'DELETE'])
+@app.route("/products/<int:_id>", methods=['GET', 'DELETE', 'PUT'])
 def get_product(_id):
     if request.method == 'GET':
         cursor = db.cursor(dictionary=True)
@@ -63,6 +63,12 @@ def get_product(_id):
         cursor.execute('DELETE FROM products WHERE Id={};'.format(_id))
         db.commit()
         return make_response("Product with ID {} deleted.".format(_id), 200)
+    elif request.method == 'PUT':
+        cursor = db.cursor(dictionary=True)
+        json_data = request.json
+        cursor.execute('UPDATE products SET price={}, amount={} WHERE Id={};'.format(json_data['price'], json_data['amount'], _id))
+        db.commit()
+        return make_response("Product with ID {} updated.".format(_id), 200)
 
 @app.route("/customers", methods=['GET'])
 def get_customers():
