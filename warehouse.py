@@ -152,9 +152,46 @@ def staff(_id):
         db.commit()
         return make_response("Staff with ID {} updated. \n".format(_id), 200)
 
-@app.route("/orders", methods=['GET'])
+@app.route("/orders", methods=['GET', 'POST'])
 def get_orders():
-    return get_json("orders")
+    if request.method == 'GET':
+        return make_response(get_json("orders"), 200)
+    elif request.method == 'POST':
+        json_data = request.json
+        if json_data is not None:
+            cursor = db.cursor(dictionary=True)
+            query = (
+                "INSERT INTO orders (first_name, last_name, employee_since, age) "
+                "VALUES (%s, %s, %s, %s);"
+            )
+            data = (json_data['first_name'], json_data['last_name'], json_data['employee_since'], json_data['age'])
+            cursor.execute(query, data)
+            db.commit()
+            if cursor is not None:
+                result = cursor.fetchone()
+                print(result)
+            return make_response("Added new order.\n", 201)
+
+    return make_response("Wrong type of request.\n", 400)
+
+@app.route("/orders/<int:_id>", methods=['GET', 'DELETE', 'PUT'])
+def order(_id):
+    if request.method == 'GET':
+        cursor = db.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM orders WHERE Id={};'.format(_id))
+        result = cursor.fetchall()
+        return make_response(jsonify(result), 200)
+    elif request.method == 'DELETE':
+        cursor = db.cursor(dictionary=True)
+        cursor.execute('DELETE FROM orders WHERE Id={};'.format(_id))
+        db.commit()
+        return make_response("Order with ID {} deleted.\n".format(_id), 200)
+    elif request.method == 'PUT':
+        cursor = db.cursor(dictionary=True)
+        json_data = request.json
+        cursor.execute('UPDATE orders SET last_name="{}" WHERE Id={};'.format(json_data['last_name'], _id))
+        db.commit()
+        return make_response("Order with ID {} updated. \n".format(_id), 200)
 
 def get_json(table):
     cursor = db.cursor(dictionary=True)
