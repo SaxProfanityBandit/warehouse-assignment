@@ -26,7 +26,7 @@ app.config['JSON_AS_ASCII'] = False
 
 @app.route("/")
 def show_index():
-    return "Welcome to the index of this warehouse."
+    return "Welcome to the index of this warehouse.\n"
 
 @app.route("/products", methods=['GET', 'POST'])
 def products():
@@ -46,9 +46,9 @@ def products():
             if cursor is not None:
                 result = cursor.fetchone()
                 print(result)
-            return make_response("Added new product.", 201)
+            return make_response("Added new product.\n", 201)
 
-    return make_response("Wrong type of request.", 400)
+    return make_response("Wrong type of request.\n", 400)
 
 
 @app.route("/products/<int:_id>", methods=['GET', 'DELETE', 'PUT'])
@@ -62,13 +62,13 @@ def product(_id):
         cursor = db.cursor(dictionary=True)
         cursor.execute('DELETE FROM products WHERE Id={};'.format(_id))
         db.commit()
-        return make_response("Product with ID {} deleted.".format(_id), 200)
+        return make_response("Product with ID {} deleted.\n".format(_id), 200)
     elif request.method == 'PUT':
         cursor = db.cursor(dictionary=True)
         json_data = request.json
         cursor.execute('UPDATE products SET price={}, amount={} WHERE Id={};'.format(json_data['price'], json_data['amount'], _id))
         db.commit()
-        return make_response("Product with ID {} updated.".format(_id), 200)
+        return make_response("Product with ID {} updated.\n".format(_id), 200)
 
 @app.route("/customers", methods=['GET', 'POST'])
 def get_customers():
@@ -88,9 +88,9 @@ def get_customers():
             if cursor is not None:
                 result = cursor.fetchone()
                 print(result)
-            return make_response("Added new customer.", 201)
+            return make_response("Added new customer.\n", 201)
 
-    return make_response("Wrong type of request.", 400)
+    return make_response("Wrong type of request.\n", 400)
 
 @app.route("/customers/<int:_id>", methods=['GET', 'DELETE', 'PUT'])
 def customer(_id):
@@ -103,13 +103,13 @@ def customer(_id):
         cursor = db.cursor(dictionary=True)
         cursor.execute('DELETE FROM customers WHERE Id={};'.format(_id))
         db.commit()
-        return make_response("Customer with ID {} deleted.".format(_id), 200)
+        return make_response("Customer with ID {} deleted.\n".format(_id), 200)
     elif request.method == 'PUT':
         cursor = db.cursor(dictionary=True)
         json_data = request.json
         cursor.execute('UPDATE customers SET age={} WHERE Id={};'.format(json_data['age'], _id))
         db.commit()
-        return make_response("Customer with ID {} updated.".format(_id), 200)
+        return make_response("Customer with ID {} updated.\n".format(_id), 200)
 
 @app.route("/staff", methods=['GET', 'POST'])
 def get_staff():
@@ -129,9 +129,9 @@ def get_staff():
             if cursor is not None:
                 result = cursor.fetchone()
                 print(result)
-            return make_response("Added new staff.", 201)
+            return make_response("Added new staff.\n", 201)
 
-    return make_response("Wrong type of request.", 400)
+    return make_response("Wrong type of request.\n", 400)
 
 @app.route("/staff/<int:_id>", methods=['GET', 'DELETE', 'PUT'])
 def staff(_id):
@@ -144,13 +144,13 @@ def staff(_id):
         cursor = db.cursor(dictionary=True)
         cursor.execute('DELETE FROM staff WHERE Id={};'.format(_id))
         db.commit()
-        return make_response("Staff with ID {} deleted.".format(_id), 200)
+        return make_response("Staff with ID {} deleted.\n".format(_id), 200)
     elif request.method == 'PUT':
         cursor = db.cursor(dictionary=True)
         json_data = request.json
         cursor.execute('UPDATE staff SET last_name="{}" WHERE Id={};'.format(json_data['last_name'], _id))
         db.commit()
-        return make_response("Staff with ID {} updated.".format(_id), 200)
+        return make_response("Staff with ID {} updated. \n".format(_id), 200)
 
 @app.route("/orders", methods=['GET'])
 def get_orders():
