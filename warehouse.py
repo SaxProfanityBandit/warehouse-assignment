@@ -174,24 +174,21 @@ def get_orders():
 
     return make_response("Wrong type of request.\n", 400)
 
-@app.route("/orders/<int:_id>", methods=['GET', 'DELETE', 'PUT'])
+@app.route("/orders/<int:_id>", methods=['GET'])
 def order(_id):
     if request.method == 'GET':
         cursor = db.cursor(dictionary=True)
         cursor.execute('SELECT * FROM orders WHERE product_id={};'.format(_id))
         result = cursor.fetchall()
         return make_response(jsonify(result), 200)
-    elif request.method == 'DELETE':
+
+@app.route("/orders/<int:_pid>/<int:_cid>", methods=['GET', 'DELETE', 'PUT'])
+def change_orders(_pid, _cid):
+    if request.method == 'GET':
         cursor = db.cursor(dictionary=True)
-        cursor.execute('DELETE FROM orders WHERE Id={};'.format(_id))
-        db.commit()
-        return make_response("Order with ID {} deleted.\n".format(_id), 200)
-    elif request.method == 'PUT':
-        cursor = db.cursor(dictionary=True)
-        json_data = request.json
-        cursor.execute('UPDATE orders SET last_name="{}" WHERE Id={};'.format(json_data['last_name'], _id))
-        db.commit()
-        return make_response("Order with ID {} updated. \n".format(_id), 200)
+        cursor.execute('SELECT * FROM orders WHERE product_id={} AND customer_id={};'.format(_pid, _cid))
+        result = cursor.fetchall()
+        return make_response(jsonify(result), 200)
 
 def get_json(table):
     cursor = db.cursor(dictionary=True)
