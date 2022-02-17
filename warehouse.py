@@ -92,6 +92,25 @@ def get_customers():
 
     return make_response("Wrong type of request.", 400)
 
+@app.route("/customers/<int:_id>", methods=['GET', 'DELETE', 'PUT'])
+def get_product(_id):
+    if request.method == 'GET':
+        cursor = db.cursor(dictionary=True)
+        cursor.execute('SELECT * FROM customers WHERE Id={};'.format(_id))
+        result = cursor.fetchall()
+        return make_response(jsonify(result), 200)
+    elif request.method == 'DELETE':
+        cursor = db.cursor(dictionary=True)
+        cursor.execute('DELETE FROM customers WHERE Id={};'.format(_id))
+        db.commit()
+        return make_response("Customer with ID {} deleted.".format(_id), 200)
+    elif request.method == 'PUT':
+        cursor = db.cursor(dictionary=True)
+        json_data = request.json
+        cursor.execute('UPDATE customers SET age={} WHERE Id={};'.format(json_data['age'], _id))
+        db.commit()
+        return make_response("Customer with ID {} updated.".format(_id), 200)
+
 @app.route("/staff", methods=['GET'])
 def get_staff():
     return get_json("staff")
