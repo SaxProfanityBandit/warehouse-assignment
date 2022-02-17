@@ -189,6 +189,11 @@ def change_orders(_pid, _cid):
         cursor.execute('SELECT * FROM orders WHERE product_id={} AND customer_id={};'.format(_pid, _cid))
         result = cursor.fetchall()
         return make_response(jsonify(result), 200)
+    elif request.method == 'DELETE':
+        cursor = db.cursor(dictionary=True)
+        cursor.execute('DELETE FROM staff WHERE product_id={} AND customer_id={};'.format(_pid, _cid))
+        db.commit()
+        return make_response("Order with Product ID: {} and Customer ID: {} deleted.\n".format(_pid, _cid), 200)
 
 def get_json(table):
     cursor = db.cursor(dictionary=True)
