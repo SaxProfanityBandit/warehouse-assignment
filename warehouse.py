@@ -1,7 +1,5 @@
 #Imports
 from flask import Flask, jsonify, make_response
-#from flask_mysqldb import MySQL
-#import json
 import mysql.connector
 #from datetime import datetime
 from flask import request
@@ -30,7 +28,7 @@ app.config['JSON_AS_ASCII'] = False
 def show_index():
     return "Welcome to the index of this warehouse."
 
-@app.route("/products", methods=['GET', 'POST'])
+@app.route("/products/<int:_id>", methods=['GET', 'POST'])
 def products():
     if request.method == 'GET':
         return make_response(get_json("products"), 200)
