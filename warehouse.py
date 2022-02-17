@@ -61,6 +61,7 @@ def get_product(_id):
     elif request.method == 'DELETE':
         cursor = db.cursor(dictionary=True)
         cursor.execute('DELETE FROM products WHERE Id={};'.format(_id))
+        db.commit()
         return make_response("Product with ID {} deleted.".format(_id), 200)
 
 @app.route("/customers", methods=['GET'])
