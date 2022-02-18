@@ -193,7 +193,7 @@ def change_orders(_pid, _cid):
         cursor = db.cursor(dictionary=True)
         cursor.execute('DELETE FROM orders WHERE product_id={} AND customer_id={} ORDER BY created_at DESC LIMIT 1;'.format(_pid, _cid))
         db.commit()
-        return make_response("Order(s) with Product ID: {} and Customer ID: {} deleted.\n".format(_pid, _cid), 200)
+        return make_response("Latest Order with Product ID: {} and Customer ID: {} deleted.\n".format(_pid, _cid), 200)
     elif request.method == 'PUT':
         cursor = db.cursor(dictionary=True)
         json_data = request.json
